@@ -5,10 +5,10 @@ import maze
 
 
 class User:
-    # 数学位置
+    # 相对于迷宫的位置
     roomx = 0
     roomy = 0
-    # 角色开局位置
+    # 角色开局位置 这个参数不要乱调， 会影响笑脸的位置
     __PosX = 26+maze.room_size/10
     __posY = 25+maze.room_size/10
     __user = 0

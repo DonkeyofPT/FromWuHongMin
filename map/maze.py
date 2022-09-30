@@ -25,9 +25,8 @@ global screen_height
 screen_height = room_m * room_size*1.2
 
 
-#迷宫墙壁判断
+#迷宫墙壁判断 这个叼迷宫的上下左右碰墙不是0123 而是下面的对应。
 # 上0 下2 左3 右1
-#list.walls[n]
 ChangeList = [0, 2, 3, 1]
 
 class room():
@@ -61,7 +60,7 @@ def draw_room(screen, begin_point, walls, size, r_color):
             pygame.draw.line(screen, r_color, (x, y + size), (x, y))
 
 
-# 生成迷宫地图
+# 生成迷宫地图， 这个数学迷宫，True也就是1 表示有墙
 def creat_map(m, n):
     room_list = [[0 for col in range(n)] for row in range(m)] # 二维数组: m*n
     for i in range(m):
@@ -70,7 +69,7 @@ def creat_map(m, n):
     return room_list
 
 
-
+# whm add 作用在于填补四周的空缺 还有就是让相邻的上下墙都是状态为1
 def check_map(room_list: list):
     for i in range(room_m):
         for j in range(room_n):
@@ -90,7 +89,6 @@ def check_map(room_list: list):
                     room_list[i][j+1].walls[0] = 1
                 if room_list[i][j+1].walls[0] == 1:
                     room_list[i][j].walls[2] = 1
-
 
 
 # 获取下一个房间
@@ -125,8 +123,12 @@ def get_next_room(room_list, room):
                 if room_id == 2:
                     room.walls[1] = 0 #当前房间的右边
                     next_room.walls[3] = 0 #上面房间的左边
+
+                    #whm add begin 就是让迷宫更复杂一点，同时创造了一个bug，相邻的正方形 需要check_map修复。
                     room.walls[2] = 0
                     next_room.walls[0] = 0
+                    #whm add end
+
                 if room_id == 3:
                     room.walls[2] = 0
                     next_room.walls[0] = 0
@@ -152,4 +154,5 @@ def creat_migong(room_list, next_room, temp_yes_rooms=[]):
             next_room = temp_yes_rooms.pop()  # 否则出栈
             if len(temp_yes_rooms) == 0:
                 break
+    # whm add 新增修补迷宫四周。
     check_map(room_list)
